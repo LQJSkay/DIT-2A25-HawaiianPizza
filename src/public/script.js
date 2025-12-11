@@ -13,16 +13,20 @@ function setToken(token) { localStorage.setItem('token', token); }
 function getToken() { return localStorage.getItem('token'); }
 function removeToken() { localStorage.removeItem('token'); }
 
-function showView(view) {
-  loginView.style.display = 'none';
-  registerView.style.display = 'none';
-  profileView.style.display = 'none';
-  view.style.display = 'block';
+if (showRegisterBtn) {
+  showRegisterBtn.onclick = () => showView(registerView);
 }
 
-showRegisterBtn.onclick = () => showView(registerView);
-showLoginBtn.onclick = () => showView(loginView);
-logoutBtn.onclick = () => { removeToken(); showView(loginView); };
+if (showLoginBtn) {
+  showLoginBtn.onclick = () => showView(loginView);
+}
+
+if (logoutBtn) {
+  logoutBtn.onclick = () => {
+    removeToken();
+    showView(loginView);
+};
+}
 // ====== CONFIG ======
 const API_BASE_URL = 'http://localhost:3000'; // backend origin
 
@@ -112,6 +116,12 @@ function openCompareModal() {
   const items = getCompareItems();
 
   if (!backdrop || !tableBody) return;
+
+function closeCompareModal() {
+  const backdrop = document.getElementById("compareBackdrop");
+  if (!backdrop) return;
+  backdrop.style.display = "none";
+}
 
 async function register() {
   const name = document.getElementById('regName').value;
@@ -408,6 +418,18 @@ updateProfileBtn.onclick = updateProfile;
 // Auto-load profile if token exists
 document.addEventListener('DOMContentLoaded', loadProfile);
   renderCompareBar();
+
+  if (loginBtn) {
+  loginBtn.onclick = login;
+}
+
+if (registerBtn) {
+  registerBtn.onclick = register;
+}
+
+if (updateProfileBtn) {
+  updateProfileBtn.onclick = updateProfile;
+}
 
   // 🔥 Load cars from backend + render cards
   const cars = await fetchCars();
